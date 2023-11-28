@@ -1,21 +1,26 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
 
 function App() {
   const [count, setCount] = useState(0)
+  const [response, setResponse] = useState({});
+  const handleClick = async (e: React.MouseEvent<HTMLElement>) => {
+    e.preventDefault();
+    const resp = await fetch("https://httpbin.org/get", {
+            "headers": {
+              "accept": "application/json",
+              "accept-language": "en-US,en;q=0.9",
+            },
+            "body": null,
+            "method": "GET",
+            "mode": "cors",
+            "credentials": "omit"
+          }); 
+    setResponse(await resp.json());
+  }
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
+    <>      
       <h1>Vite + React</h1>
       <div className="card">
         <button onClick={() => setCount((count) => count + 1)}>
@@ -28,6 +33,10 @@ function App() {
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
       </p>
+      <button onClick={handleClick}>
+          call api
+       </button>
+       {JSON.stringify(response)}
     </>
   )
 }
